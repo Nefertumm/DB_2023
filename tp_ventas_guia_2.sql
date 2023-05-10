@@ -59,3 +59,24 @@ WHERE NOT EXISTS (
 		ON sl.id_producto = prod.id_producto
 )
 GROUP BY ov.id_oficina, ov.nombre;
+
+-- Ejercicio 8
+SELECT ov.nombre, cl.apellidos, COUNT(pd.*) cant_pedidos
+FROM pedidos AS pd JOIN vendedores AS vend ON pd.id_vend = vend.id_vend
+JOIN clientes AS cl ON pd.id_cliente = cl.id_cliente
+JOIN oficinas_vtas AS ov ON vend.id_oficina = ov.id_oficina
+WHERE cl.cod_post = 2000
+GROUP BY ov.nombre, cl.apellidos
+HAVING COUNT(pd.*) > 1;
+
+-- Ejercicio 9
+SELECT cl.id_cliente, cl.apellidos, cl.domicilio, cl.cod_post, ov.nombre nombre_oficina
+FROM clientes AS cl JOIN pedidos AS pd ON cl.id_cliente = pd.id_cliente
+JOIN vendedores AS vend ON pd.id_vend = vend.id_vend
+JOIN oficinas_vtas AS ov ON vend.id_oficina = ov.id_oficina
+JOIN localidades AS loc ON cl.cod_post = loc.cod_post
+WHERE loc.id_prov = 'S' OR 
+	vend.id_oficina = (SELECT id_oficina FROM oficinas_vtas WHERE cod_post = 3300)
+ORDER BY cl.apellidos;
+
+-- Ejercicio 10
